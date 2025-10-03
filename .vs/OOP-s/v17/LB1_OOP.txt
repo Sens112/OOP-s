@@ -1,0 +1,97 @@
+public class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Input N: ");
+        int n = int.Parse(Console.ReadLine());
+        int[] a = new int [n];
+        Console.WriteLine("\nInput A:");
+        
+        for (int i = 0; i < a.Length; i++) 
+        {
+            Console.WriteLine ($"array [{i}] = ");
+            a [i] = int.Parse(Console.ReadLine());
+        }
+        int count = 0;
+        for (int i = 0; i < a.Length; i++) 
+        {
+            if (a[i] > 0) 
+            {
+                count ++;
+            }
+        }
+        int[] b = new int [count];
+        int index = 0;
+        for (int i = 0; i < n; i++)
+        {
+            if (a[i] > 0)
+            {
+                b[index] = a[i];
+                index++;
+            }
+        }
+
+        Console.WriteLine("\nArray A:");
+        Console.WriteLine(string.Join(", ", a));
+
+        Console.WriteLine("Array B:");
+        if (b.Length > 0)
+            Console.WriteLine(string.Join(", ", b));
+        else
+            Console.WriteLine("There`s nothing in A");
+
+    }
+}
+
+
+public class Program
+{
+    unsafe public static void Main()
+    {
+        Console.Write("Input N: ");
+        int N = int.Parse(Console.ReadLine());
+
+        int[] A = new int[N];
+        Console.WriteLine("Input Array A:");
+        for (int i = 0; i < N; i++)
+        {
+            Console.Write($"A[{i}] = ");
+            A[i] = int.Parse(Console.ReadLine());
+        }
+
+        Console.Write("Input T: ");
+        int T = int.Parse(Console.ReadLine());
+
+        int lastMaxIndex = -1;
+        int maxValue = int.MinValue;
+
+        fixed (int* pA = A) 
+        {
+            int* p = pA; 
+            for (int i = 0; i < N; i++, p++) 
+            {
+                if (*p > T && *p > 0) 
+                {
+                    if (*p >= maxValue)
+                    {
+                        maxValue = *p;
+                        lastMaxIndex = i;
+                    }
+                }
+            }
+        }
+
+        Console.WriteLine("\nArray A:");
+        Console.WriteLine(string.Join(", ", A));
+
+        if (lastMaxIndex != -1)
+        {
+            Console.WriteLine($"\nLast max number > T: {lastMaxIndex}");
+            Console.WriteLine($"Max value: {maxValue}");
+        }
+        else
+        {
+            Console.WriteLine("\nThere`s no numbers bigger than T");
+        }
+    }
+}
