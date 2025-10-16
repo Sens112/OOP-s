@@ -95,3 +95,68 @@ public class Program
         }
     }
 }
+
+    public class Program
+    {
+        static void Main()
+        {
+            Console.Write("Input n(200el): ");
+            int n = int.Parse(Console.ReadLine());
+            double[] X = new double[n];
+
+            Console.Write("Input a: ");
+            double a = double.Parse(Console.ReadLine());
+            Console.Write("Input b: ");
+            double b = double.Parse(Console.ReadLine());
+
+            Console.WriteLine("Input array:");
+            for (int i = 0; i < n; i++)
+            {
+                Console.Write($"X[{i + 1}] = ");
+                X[i] = double.Parse(Console.ReadLine());
+            }
+
+            double sumA = 0;         
+            double prodB = 1;        
+            bool hasProd = false;    
+            double maxInRange = double.MinValue;
+            double minInRange = double.MaxValue;
+            bool hasRange = false;
+
+            for (int i = 0; i < n; i++)
+            {
+                if (X[i] < a)
+                    sumA += X[i];
+                else if (X[i] > b)
+                {
+                    prodB *= X[i];
+                    hasProd = true;
+                }
+                else 
+                {
+                    if (!hasRange)
+                    {
+                        maxInRange = X[i];
+                        minInRange = X[i];
+                        hasRange = true;
+                    }
+                    else
+                    {
+                        if (X[i] > maxInRange) maxInRange = X[i];
+                        if (X[i] < minInRange) minInRange = X[i];
+                    }
+                }
+            }
+
+            Console.WriteLine($"\nSum el that lower than a: {sumA}");
+            Console.WriteLine(hasProd ? $"Prod el that bigger than b = {prodB}" : "There`s no el that bigger than b");
+            if (hasRange)
+            {
+                Console.WriteLine($"Max between [a,b] = {maxInRange}");
+                Console.WriteLine($"Min between [a,b] = {minInRange}");
+            }
+            else
+                Console.WriteLine("There`s no els in [a,b]");
+        }
+    }
+}
