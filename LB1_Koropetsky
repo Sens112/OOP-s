@@ -62,3 +62,60 @@ public class Program
 
 
 }
+ZVD 2
+ internal class Program
+ {
+     static void Main()
+     {
+         Console.InputEncoding = Encoding.UTF8;
+         Console.OutputEncoding = Encoding.UTF8;
+
+         Console.WriteLine("Сума цілих чисел: " + Add(5, 7));
+       
+         Add(2, 3, 1, 4);
+
+         Console.WriteLine("НСК(6, 8, 12) = " + LCM(6, 8, 12));
+
+     }
+     static int Add(int a, int b) 
+     {
+         return a + b;
+     }
+
+     static void Add(double a1, double a2, double b1, double b2) 
+     {
+         double real = a1 + b1;
+         double imag = a2 + b2;
+         Console.WriteLine($"Sum complex nums: {real} + {imag} ");
+     }
+
+     static int NCD(int a, int b) 
+     {
+         while (b != 0)
+         {
+             int temp = b;
+             b = a % b;
+             a = temp;
+
+         }
+         return a;
+     }
+
+     static int LCM(int a, int b)
+     {
+         return a * b / NCD(a, b);
+     }
+
+     static int LCM(params int[] numbers)
+     {
+         if (numbers.Length == 0)
+             return 0;
+
+         int result = numbers[0];
+         for (int i = 1; i < numbers.Length; i++)
+         {
+             result = LCM(result, numbers[i]);
+         }
+         return result;
+     }
+ }
