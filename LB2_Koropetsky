@@ -1,0 +1,113 @@
+1 zvd
+public class Program
+{
+    static void Main()
+    {
+        int[] a = new int[10];
+        Console.WriteLine("------------------------------------------------------");
+        Console.WriteLine("Input numbers for array");
+        for (int i = 0; i < a.Length; i++)
+        {
+            Console.Write($"array [{i}] = ");
+            a[i] = int.Parse(Console.ReadLine());
+        }
+        int sum = 0;
+        int negEl = 0;
+        int avg = 0;
+        for (int i = 0; i < a.Length; i++)
+        {
+            sum += a[i];
+
+            if (a[i] < 0) 
+            {
+                negEl++;
+                avg = sum / 10;
+            }
+        }
+        Console.WriteLine("Your array: ");
+        for (int i = 0; i < a.Length; i++) 
+        {
+            Console.Write(a[i] + " ");
+        }
+
+        Console.WriteLine($"\nSuma: {sum}");
+        Console.WriteLine($"Negative els: {negEl}");
+        Console.WriteLine($"Average of not negative els: {avg}");
+        Console.WriteLine("------------------------------------------------------");
+    }
+
+}
+
+
+2zvd
+ public class Program
+ {
+     static void Main()
+     {
+         Console.InputEncoding = Encoding.UTF8;
+         Console.OutputEncoding = Encoding.UTF8;
+
+         Console.Write("Введіть розмір квадратної матриці (n): ");
+         int n = int.Parse(Console.ReadLine());
+
+         int[,] matrix = new int[n, n];
+
+         Console.WriteLine("Введіть елементи матриці:");
+         for (int i = 0; i < n; i++)
+         {
+             for (int j = 0; j < n; j++)
+             {
+                 Console.Write($"matrix[{i + 1},{j + 1}] = ");
+                 matrix[i, j] = int.Parse(Console.ReadLine());
+             }
+         }
+
+         Console.WriteLine("\nВведена матриця:");
+         for (int i = 0; i < n; i++)
+         {
+             for (int j = 0; j < n; j++)
+                 Console.Write(matrix[i, j] + "\t");
+             Console.WriteLine();
+         }
+
+         int sum = 0;
+         for (int j = 0; j < n; j++)
+             sum += matrix[0, j];
+
+         bool magic = true;
+
+         for (int i = 1; i < n; i++)
+         {
+             int rowSum = 0;
+             for (int j = 0; j < n; j++)
+                 rowSum += matrix[i, j];
+             if (rowSum != sum) magic = false;
+         }
+
+         for (int j = 0; j < n; j++)
+         {
+             int colSum = 0;
+             for (int i = 0; i < n; i++)
+                 colSum += matrix[i, j];
+             if (colSum != sum) magic = false;
+         }
+
+         int diag1 = 0;
+         for (int i = 0; i < n; i++)
+             diag1 += matrix[i, i];
+         if (diag1 != sum) magic = false;
+
+         int diag2 = 0;
+         for (int i = 0; i < n; i++)
+             diag2 += matrix[i, n - 1 - i];
+         if (diag2 != sum) magic = false;
+
+         Console.WriteLine("\nРезультат перевірки:");
+         if (magic)
+             Console.WriteLine("Це магічний квадрат! ✨");
+         else
+             Console.WriteLine("Це не магічний квадрат.");
+
+     }
+
+ }
