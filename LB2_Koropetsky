@@ -104,10 +104,67 @@ public class Program
 
          Console.WriteLine("\nРезультат перевірки:");
          if (magic)
-             Console.WriteLine("Це магічний квадрат! ✨");
+             Console.WriteLine("Це магічний квадрат! ");
          else
              Console.WriteLine("Це не магічний квадрат.");
 
      }
 
+ }
+
+3zvd
+ public class Program
+ {
+     static void Main()
+     {
+         Console.InputEncoding = Encoding.UTF8;
+         Console.OutputEncoding = Encoding.UTF8;
+
+         Console.WriteLine("Комп’ютер задумав трьохзначне число. Ви повинні його відгадати.");
+         Console.WriteLine("Після вводу числа натисніть <Enter>.");
+         Console.WriteLine("Для завершення гри введіть 0.");
+         Console.WriteLine("------------------------------------------------------");
+
+         Random rand = new Random();
+         int secretNumber = rand.Next(100, 1000); 
+         string secret = secretNumber.ToString();
+
+         while (true)
+         {
+             Console.Write("\nВаш варіант -> ");
+             string guess = Console.ReadLine();
+
+             if (guess == "0") 
+             {
+                 Console.WriteLine("Гру завершено. Загадане число було: " + secret);
+                 break;
+             }
+
+             if (guess.Length != 3 || !int.TryParse(guess, out _))
+             {
+                 Console.WriteLine("Введіть коректне трьохзначне число!");
+                 continue;
+             }
+
+             int guessedDigits = 0;
+             int correctPositions = 0;
+
+             for (int i = 0; i < 3; i++)
+             {
+                 if (secret.Contains(guess[i]))
+                     guessedDigits++;
+                 if (secret[i] == guess[i])
+                     correctPositions++;
+             }
+
+             Console.WriteLine($"Вгадано: {guessedDigits}. На своїх позиціях: {correctPositions}");
+
+             if (correctPositions == 3)
+             {
+                 Console.WriteLine("!!! ВИ ВГАДАЛИ !!! ");
+                 Console.WriteLine("------------------------------------------------------");
+                 break;
+             }
+         }
+     }
  }
