@@ -168,3 +168,67 @@ public class Program
          }
      }
  }
+
+4zvd
+public class Program
+{
+    static void Main()
+    {
+        //Console.InputEncoding = Encoding.UTF8;
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Console.WriteLine("Телеграф (Азбука Морзе, українська мова)");
+        Console.Write("Введіть повідомлення: ");
+        string message = Console.ReadLine().ToUpper();
+
+        Dictionary<char, string> morse = new Dictionary<char, string>()
+        {
+            ['А'] = ".-",
+            ['Б'] = "-...",
+            ['В'] = ".--",
+            ['Г'] = "--.",
+            ['Ґ'] = "--.--",
+            ['Д'] = "-..",
+            ['Е'] = ".",
+            ['Є'] = "..-..",
+            ['Ж'] = "...-",
+            ['З'] = "--..",
+            ['И'] = "..",
+            ['І'] = "..",
+            ['Ї'] = ".---.",
+            ['Й'] = ".---",
+            ['К'] = "-.-",
+            ['Л'] = ".-..",
+            ['М'] = "--",
+            ['Н'] = "-.",
+            ['О'] = "---",
+            ['П'] = ".--.",
+            ['Р'] = ".-.",
+            ['С'] = "...",
+            ['Т'] = "-",
+            ['У'] = "..-",
+            ['Ф'] = "..-.",
+            ['Х'] = "....",
+            ['Ц'] = "-.-.",
+            ['Ч'] = "---.",
+            ['Ш'] = "----",
+            ['Щ'] = "--.-",
+            ['Ь'] = "-..-",
+            ['Ю'] = "..--",
+            ['Я'] = ".-.-",
+
+            [' '] = " / "
+        };
+
+        Console.WriteLine("\nВаше повідомлення у коді Морзе:\n");
+
+        foreach (char ch in message)
+        {
+            if (morse.ContainsKey(ch))
+                Console.Write(morse[ch] + "  ");
+            else
+                Console.Write("? ");
+        }
+
+        Console.WriteLine("\n\nКінець передачі ");
+    }
+}
