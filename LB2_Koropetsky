@@ -232,3 +232,26 @@ public class Program
         Console.WriteLine("\n\nКінець передачі ");
     }
 }
+
+5zvd
+public class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+
+public class Student : Person
+{
+    public string Group { get; set; }
+    public double AverageGrade { get; set; }
+}
+
+public class Teacher : Person
+{
+    public string Subject { get; set; }
+}
+
+public class HeadOfDepartment : Teacher
+{
+    public string Department { get; set; }
+}
