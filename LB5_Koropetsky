@@ -1,0 +1,223 @@
+ public class STUDENT
+ {
+     public string Name { get; set; }        
+     public int Year { get; set; }        
+     public double[] Bal { get; set; }       
+
+     public STUDENT()
+     {
+         Bal = new double[4];
+     }
+
+     public void Input()
+     {
+         Console.Write("Введіть прізвище та ініціали: ");
+         Name = Console.ReadLine();
+
+         Console.Write("Введіть рік народження: ");
+         Year = int.Parse(Console.ReadLine());
+
+         Bal = new double[4];
+         Console.WriteLine("Введіть 4 оцінки через пробіл:");
+         string[] parts = Console.ReadLine().Split(' ');
+
+         for (int i = 0; i < 4; i++)
+             Bal[i] = double.Parse(parts[i]);
+     }
+
+     public double Average()
+     {
+         double sum = 0;
+         foreach (double b in Bal)
+             sum += b;
+         return sum / Bal.Length;
+     }
+
+     public void Show()
+     {
+         Console.WriteLine($"{Name}, {Year} р.н. — середній бал: {Average():f2}");
+     }
+ }
+
+ class Program
+ {
+     static void Main()
+     {
+         Console.InputEncoding = Encoding.Unicode;
+         Console.OutputEncoding = Encoding.Unicode;
+
+         Console.Write("Введіть кількість студентів N: ");
+         int N = int.Parse(Console.ReadLine());
+
+         STUDENT[] Group = new STUDENT[N];
+
+         for (int i = 0; i < N; i++)
+         {
+             Console.WriteLine($"\nСтудент №{i + 1}:");
+             Group[i] = new STUDENT();
+             Group[i].Input();
+         }
+
+         Console.WriteLine("\nСтуденти із середнім балом > 4.0:\n");
+
+         bool found = false;
+         foreach (var s in Group)
+         {
+             if (s.Average() > 4.0)
+             {
+                 s.Show();
+                 found = true;
+             }
+         }
+
+         if (!found)
+             Console.WriteLine("Немає студентів із середнім балом більше 4.0.");
+
+    
+     }
+ }
+
+
+
+
+2 zvd
+
+
+public class B1
+{
+    protected int x;
+
+    public B1()
+    {
+        x = 1;
+        Console.WriteLine("Конструктор B1");
+    }
+
+    public virtual void Show()
+    {
+        Console.WriteLine($"B1: x = {x}");
+    }
+}
+
+class B2 : B1
+{
+    protected int y;
+
+    public B2()
+    {
+        y = 2;
+        Console.WriteLine("Конструктор B2");
+    }
+
+    public override void Show()
+    {
+        base.Show();
+        Console.WriteLine($"B2: y = {y}");
+    }
+}
+
+class B3 : B1
+{
+    protected int z;
+
+    public B3()
+    {
+        z = 3;
+        Console.WriteLine("Конструктор B3");
+    }
+
+    public override void Show()
+    {
+        base.Show();
+        Console.WriteLine($"B3: z = {z}");
+    }
+}
+
+class D1 : B2
+{
+    protected int a;
+
+    public D1()
+    {
+        a = 10;
+        Console.WriteLine("Конструктор D1");
+    }
+
+    public override void Show()
+    {
+        base.Show();
+        Console.WriteLine($"D1: a = {a}");
+    }
+}
+
+class D2
+{
+    private D1 d1;
+    private int b;
+
+    public D2()
+    {
+        d1 = new D1();
+        b = 20;
+        Console.WriteLine("Конструктор D2");
+    }
+
+    public void Show()
+    {
+        d1.Show();
+        Console.WriteLine($"D2: b = {b}");
+    }
+}
+
+class D3 : B3
+{
+    protected int c;
+
+    public D3()
+    {
+        c = 30;
+        Console.WriteLine("Конструктор D3");
+    }
+
+    public override void Show()
+    {
+        base.Show();
+        Console.WriteLine($"D3: c = {c}");
+    }
+}
+
+class D4 : D3
+{
+    private D2 d2;
+    private int d;
+
+    public D4()
+    {
+        d2 = new D2();
+        d = 40;
+        Console.WriteLine("Конструктор D4");
+    }
+
+    public override void Show()
+    {
+        Console.WriteLine("\nВиведення з D4");
+        d2.Show();
+        base.Show();
+        Console.WriteLine($"D4: d = {d}");
+    }
+}
+
+public class Program
+{
+    static void Main()
+    {
+        Console.InputEncoding = Encoding.Unicode;
+        Console.OutputEncoding = Encoding.Unicode;
+        Console.WriteLine("Ієрархія успадкування\n");
+
+        D4 obj = new D4();
+        obj.Show();
+
+      
+    }
+}
