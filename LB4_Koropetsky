@@ -1,0 +1,203 @@
+ class Fraction
+ {
+     private int numerator; 
+     private int denominator;
+
+     public Fraction() 
+     {
+         numerator = 0;
+         denominator = 1;
+     }
+
+     public Fraction(int num, int den) 
+     {
+         if (den == 0)
+         {
+             Console.WriteLine("Знаменник не може бути нулем! Змінено на 1.");
+             den = 1;
+         }
+
+         if (den < 0)
+         {
+             num = -num;
+             den = -den;
+         }
+         numerator = num;
+         denominator = den;
+         Reduce(); 
+     }
+
+     public Fraction(Fraction other) 
+     {
+         numerator = other.numerator;
+         denominator = other.denominator;
+     }
+
+     ~Fraction()
+     {
+       
+     }
+
+     public void Input()
+     {
+         Console.Write("Введіть чисельник: ");
+         numerator = int.Parse(Console.ReadLine());
+
+         Console.Write("Введіть знаменник: ");
+         denominator = int.Parse(Console.ReadLine());
+
+         if (denominator == 0)
+         {
+             Console.WriteLine("Знаменник не може бути нулем! Змінено на 1");
+             denominator = 1;
+         }
+         else if (denominator < 0)
+         {
+             numerator = -numerator;
+             denominator = -denominator;
+         }
+         Reduce();
+     }
+
+     public void Show()
+     {
+         Console.WriteLine($"{numerator}/{denominator}");
+     }
+
+     public double Value()
+     {
+         return (double)numerator / denominator;
+     }
+
+     private static int GCD(int a, int b)
+     {
+         a = Math.Abs(a);
+         b = Math.Abs(b);
+         while (b != 0)
+         {
+             int temp = b;
+             b = a % b;
+             a = temp;
+         }
+         return a;
+     }
+
+     private void Reduce()
+     {
+         if (numerator == 0)
+         {
+             denominator = 1;
+             return;
+         }
+         int gcd = GCD(numerator, denominator);
+         numerator /= gcd;
+         denominator /= gcd;
+     }
+
+     public static Fraction operator +(Fraction a, Fraction b)
+     {
+         int num = a.numerator * b.denominator + b.numerator * a.denominator;
+         int den = a.denominator * b.denominator;
+         return new Fraction(num, den);
+     }
+
+     public static Fraction operator -(Fraction a, Fraction b)
+     {
+         int num = a.numerator * b.denominator - b.numerator * a.denominator;
+         int den = a.denominator * b.denominator;
+         return new Fraction(num, den);
+     }
+
+     public static Fraction operator *(Fraction a, Fraction b)
+     {
+         return new Fraction(a.numerator * b.numerator, a.denominator * b.denominator);
+     }
+
+     public static Fraction operator /(Fraction a, Fraction b)
+     {
+         if (b.numerator == 0)
+             throw new DivideByZeroException("Ділення на нуль!");
+         return new Fraction(a.numerator * b.denominator, a.denominator * b.numerator);
+     }
+
+     public static Fraction operator ++(Fraction f)
+     {
+         return f + new Fraction(1, 1);
+     }
+
+     public static Fraction operator --(Fraction f)
+     {
+         return f - new Fraction(1, 1);
+     }
+
+     public static bool operator ==(Fraction a, Fraction b)
+     {
+         if (ReferenceEquals(a, b)) return true;
+         if (ReferenceEquals(a, null) || ReferenceEquals(b, null)) return false;
+         return a.numerator == b.numerator && a.denominator == b.denominator;
+     }
+
+     public static bool operator !=(Fraction a, Fraction b)
+     {
+         return !(a == b);
+     }
+
+     public override bool Equals(object obj)
+     {
+         if (obj is Fraction f)
+             return this == f;
+         return false;
+     }
+
+     public override int GetHashCode()
+     {
+         return numerator.GetHashCode() ^ denominator.GetHashCode();
+     }
+
+     public override string ToString()
+     {
+         return $"{numerator}/{denominator}";
+     }
+ }
+
+ class Program
+ {
+     static void Main()
+     {
+         Console.InputEncoding = Encoding.Unicode;
+         Console.OutputEncoding = Encoding.Unicode;
+
+         Console.WriteLine("=== Демонстрація класу Fraction ===");
+
+         Fraction f1 = new Fraction(1, 2);
+         Fraction f2 = new Fraction(3, 4);
+
+         Console.Write("f1 = "); f1.Show();
+         Console.Write("f2 = "); f2.Show();
+
+         Console.WriteLine("\n--- Арифметичні операції ---");
+         Fraction sum = f1 + f2;
+         Fraction diff = f1 - f2;
+         Fraction prod = f1 * f2;
+         Fraction div = f1 / f2;
+
+         Console.Write("f1 + f2 = "); sum.Show();
+         Console.Write("f1 - f2 = "); diff.Show();
+         Console.Write("f1 * f2 = "); prod.Show();
+         Console.Write("f1 / f2 = "); div.Show();
+
+         Console.WriteLine("\n--- Оператори ++ та -- (додають/віднімають 1) ---");
+         Fraction f3 = new Fraction(2, 3);
+         Console.Write("f3 = "); f3.Show();
+         Console.Write("++f3 = "); (++f3).Show(); 
+         Console.Write("f3-- = "); (f3--).Show(); 
+         Console.Write("f3 після --: "); f3.Show();
+
+         Console.WriteLine("\n--- Порівняння дробів ---");
+         Fraction f4 = new Fraction(2, 4); 
+         Fraction f5 = new Fraction(1, 2);
+         Console.WriteLine($"f4 == f5 ? {(f4 == f5)}");
+         Console.WriteLine($"f1 != f2 ? {(f1 != f2)}");
+
+     }
+ }
