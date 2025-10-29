@@ -1,0 +1,192 @@
+1 zvd
+class Student
+ {
+     private string lastName;
+     private string firstName;
+     private string middleName;
+     private DateTime birthDate;
+     private string address;
+     private string phone;
+     private string faculty;
+     private int course;
+
+     public Student(string lastName, string firstName, string middleName,
+                    DateTime birthDate, string address, string phone,
+                    string faculty, int course)
+     {
+         this.lastName = lastName;
+         this.firstName = firstName;
+         this.middleName = middleName;
+         this.birthDate = birthDate;
+         this.address = address;
+         this.phone = phone;
+         this.faculty = faculty;
+         this.course = course;
+     }
+
+     public string LastName { get => lastName; set => lastName = value; }
+     public string FirstName { get => firstName; set => firstName = value; }
+     public string MiddleName { get => middleName; set => middleName = value; }
+     public DateTime BirthDate { get => birthDate; set => birthDate = value; }
+     public string Address { get => address; set => address = value; }
+     public string Phone { get => phone; set => phone = value; }
+     public string Faculty { get => faculty; set => faculty = value; }
+     public int Course { get => course; set => course = value; }
+
+     public void Show()
+     {
+         Console.WriteLine($"{lastName} {firstName} {middleName}, " +
+                           $"Факультет: {faculty}, Курс: {course}, " +
+                           $"Дата нар.: {birthDate.ToShortDateString()}, " +
+                           $"Адреса: {address}, Телефон: {phone}");
+     }
+ }
+
+ class Program
+ {
+     static void Main()
+     {
+         Console.InputEncoding = Encoding.Unicode;
+         Console.OutputEncoding = Encoding.Unicode;
+
+         List<Student> students = new List<Student>
+     {
+         new Student("Іваненко", "Іван", "Іванович", new DateTime(2002, 5, 14), "Київ", "555123", "ІТ", 2),
+         new Student("Петренко", "Марія", "Олегівна", new DateTime(2003, 3, 21), "Львів", "555456", "Економічний", 1),
+         new Student("Сидоренко", "Олег", "Петрович", new DateTime(2001, 11, 3), "Одеса", "555789", "ІТ", 3),
+         new Student("Мельник", "Анна", "Сергіївна", new DateTime(2002, 8, 15), "Харків", "555987", "Економічний", 2)
+     };
+
+         Console.WriteLine(" a) Студенти заданого факультету (ІТ) ");
+         var facultyIt = students.Where(s => s.Faculty == "ІТ");
+         foreach (var s in facultyIt) s.Show();
+
+         Console.WriteLine("\nb) Списки студентів для кожного факультету та курсу ");
+         var grouped = students.GroupBy(s => new { s.Faculty, s.Course });
+         foreach (var group in grouped)
+         {
+             Console.WriteLine($"\nФакультет: {group.Key.Faculty}, Курс: {group.Key.Course}");
+             foreach (var s in group) s.Show();
+         }
+
+         Console.WriteLine("\n c) Студенти, які народилися після 2002 року ");
+         var after2002 = students.Where(s => s.BirthDate.Year > 2002);
+         foreach (var s in after2002) s.Show();
+
+       
+     }
+ }
+
+
+2 zvd
+ public class Complex
+ {
+     private double re;
+     private double im;
+
+     public Complex()
+     {
+         re = 0;
+         im = 0;
+     }
+
+     public Complex(double real, double imag)
+     {
+         re = real;
+         im = imag;
+     }
+
+     public Complex(Complex other)
+     {
+         re = other.re;
+         im = other.im;
+     }
+
+     public double Real
+     {
+         get { return re; }
+         set { re = value; }
+     }
+
+     public double Imag
+     {
+         get { return im; }
+         set { im = value; }
+     }
+
+     public void Show()
+     {
+         Console.WriteLine($"{re} {(im >= 0 ? "+" : "-")} {Math.Abs(im)}i");
+     }
+
+     public static Complex operator +(Complex a, Complex b)
+         => new Complex(a.re + b.re, a.im + b.im);
+
+     public static Complex operator -(Complex a, Complex b)
+         => new Complex(a.re - b.re, a.im - b.im);
+
+     public static Complex operator *(Complex a, Complex b)
+         => new Complex(a.re * b.re - a.im * b.im, a.re * b.im + a.im * b.re);
+
+     public static Complex operator /(Complex a, Complex b)
+     {
+         double denom = b.re * b.re + b.im * b.im;
+         return new Complex
+         (
+             (a.re * b.re + a.im * b.im) / denom,
+             (a.im * b.re - a.re * b.im) / denom
+         );
+     }
+
+     public Complex Assign(Complex other)
+     {
+         re = other.re;
+         im = other.im;
+         return this;
+     }
+ }
+
+ public class Program
+ {
+     static Complex[] AddVectors(Complex[] v1, Complex[] v2)
+     {
+         int n = v1.Length;
+         Complex[] result = new Complex[n];
+         for (int i = 0; i < n; i++)
+         {
+             result[i] = v1[i] + v2[i];
+         }
+         return result;
+     }
+
+     static void Main()
+     {
+         Console.InputEncoding = Encoding.Unicode;
+         Console.OutputEncoding = Encoding.Unicode;
+
+         int n = 3; 
+         Complex[] A = new Complex[n];
+         Complex[] B = new Complex[n];
+
+         A[0] = new Complex(1, 2);
+         A[1] = new Complex(3, -1);
+         A[2] = new Complex(2, 4);
+
+         B[0] = new Complex(2, 1);
+         B[1] = new Complex(-1, 3);
+         B[2] = new Complex(0, -2);
+
+         Console.WriteLine("Вектор A:");
+         foreach (var x in A) x.Show();
+
+         Console.WriteLine("\nВектор B:");
+         foreach (var x in B) x.Show();
+
+         Complex[] C = AddVectors(A, B);
+
+         Console.WriteLine("\nРезультат складання векторів A + B:");
+         foreach (var x in C) x.Show();
+
+    
+     }
+ }
