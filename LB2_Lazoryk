@@ -1,0 +1,249 @@
+public class Program
+ {
+     static void Main()
+     {
+
+         int a, b, c, d;
+
+         Console.Write("Input a: ");
+         a = int.Parse(Console.ReadLine());
+
+         Console.Write("Input b: ");
+         b = int.Parse(Console.ReadLine());
+
+         Console.Write("Input c: ");
+         c = int.Parse(Console.ReadLine());
+
+         Console.Write("Input d: ");
+         d = int.Parse(Console.ReadLine());
+
+         int part1 = (a << 3) + (a << 2) + (a << 1) + a;
+
+         int part2 = (b << 8) + (b << 5) + (b << 4) + (b << 3);
+
+         int result1 = (part1 + part2) >> 6;
+
+         int part3 = (c << 6) + (c << 5) + (c << 4) + (c << 3);
+
+         int part4 = (d << 6) + (d << 5) + (d << 4) + (d << 3) + d;
+
+         int result = result1 - part3 + part4;
+
+         Console.WriteLine($"\nРезультат виразу = {result}");
+     }
+ }
+
+
+
+zvd2,3
+public class Program
+{
+    static void Main()
+    {
+        Console.InputEncoding = Encoding.Unicode;
+        Console.OutputEncoding = Encoding.Unicode;
+
+        string[] lines = new string[4];
+        Console.WriteLine("Input 4 lines: ");
+
+        for (int i = 0; i < 4; i++)
+        {
+            Console.WriteLine($"Рядок {i + 1}: ");
+            lines[i] = Console.ReadLine() ?? " ";
+            lines[i] = lines[i].PadRight(32, ' ');
+        }
+        using (BinaryWriter bw = new BinaryWriter(File.Open("C:\\Users\\Acer\\source\\repos\\Lb2_n2_Lazorik\\file\\TextFile1.txt", FileMode.Create)))
+        {
+            for (int row = 0; row < 4; row++)
+            {
+                for (int pos = 0; pos < 32; pos++)
+                {
+                    char ch = lines[row][pos];
+                    int ascii = (int)ch;
+
+                    int encoded = 0;
+
+                    encoded |= (row & 0b11);                 
+                    encoded |= ((pos & 0b11111) << 2);       
+                    encoded |= ((ascii & 0xFF) << 7);        
+
+                    int bitCount = CountBits(encoded);
+                    if (bitCount % 2 != 0)
+                        encoded |= (1 << 15);               
+
+                    bw.Write((ushort)encoded);
+                }
+            }
+        }
+
+        Console.WriteLine("\nШифрування завершено, результат записано у файл");
+    }
+
+    static int CountBits(int n)
+    {
+        int count = 0;
+        while (n != 0)
+        {
+            count += n & 1;
+            n >>= 1;
+        }
+        return count;
+    }
+
+}
+
+
+
+
+ public class Decryptor
+ {
+     static void Main()
+     {
+         Console.InputEncoding = Encoding.Unicode;
+         Console.OutputEncoding = Encoding.Unicode;
+
+         string[] lines = new string[4];
+         for (int i = 0; i < 4; i++) lines[i] = new string(' ', 32);
+
+         using (BinaryReader br = new BinaryReader(File.Open("C:\\Users\\Acer\\source\\repos\\Lb2_n2_Lazorik\\file\\TextFile1.txt", FileMode.Open)))
+         {
+             while (br.BaseStream.Position < br.BaseStream.Length)
+             {
+                 ushort encoded = br.ReadUInt16();
+
+                 int parityBit = (encoded >> 15) & 1;
+                 int ascii = (encoded >> 7) & 0xFF;
+                 int pos = (encoded >> 2) & 0b11111;
+                 int row = encoded & 0b11;
+
+                 char ch = (char)ascii;
+
+                 int bitCount = CountBits(encoded & 0x7FFF);
+                 if ((bitCount % 2) != parityBit)
+                     Console.WriteLine($"Помилка парності у рядку {row + 1}, позиція {pos}");
+
+                 char[] arr = lines[row].ToCharArray();
+                 arr[pos] = ch;
+                 lines[row] = new string(arr);
+             }
+         }
+
+         Console.WriteLine("\nРозшифрований текст:\n");
+         foreach (string line in lines)
+             Console.WriteLine(line);
+
+         File.WriteAllLines("C:\\Users\\Acer\\source\\repos\\Lb2_n2_Lazorik_Descriptor\\Decriptor.txt", lines, Encoding.UTF8);
+         Console.WriteLine("\nРозшифрований текст записано у файл TextFile1.txt");
+     }
+
+     static int CountBits(int n)
+     {
+         int count = 0;
+         while (n != 0)
+         {
+             count += n & 1;
+             n >>= 1;
+         }
+         return count;
+     }
+ }
+
+
+
+4zvd
+
+ class BitTranspose
+ {
+     static void Main()
+     {
+         Console.InputEncoding = Encoding.Unicode;
+         Console.OutputEncoding = Encoding.Unicode;
+
+         byte[] input = new byte[]
+         {
+         0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80,   
+         0xFF, 0x00, 0xAA, 0x55, 0xF0, 0x0F, 0x11, 0x22   
+         };
+
+         Console.WriteLine("Вхідні байти:");
+         PrintBytes(input);
+
+         if (input.Length % 8 != 0)
+         {
+             Console.WriteLine("Довжина вхідного масиву повинна бути кратною 8.");
+             return;
+         }
+
+         byte[] encoded = EncodeBits(input);
+         Console.WriteLine("\nЗакодовані байти:");
+         PrintBytes(encoded);
+
+         byte[] decoded = DecodeBits(encoded);
+         Console.WriteLine("\nРозкодовані байти (повинні співпасти з вхідними):");
+         PrintBytes(decoded);
+
+         bool same = AreEqual(input, decoded);
+         Console.WriteLine($"\nДекодування збіглося з оригіналом: {same}");
+
+         File.WriteAllBytes("info.txt", encoded);
+         Console.WriteLine("Закодовані байти записані у encoded.bin");
+     }
+
+     static byte[] EncodeBits(byte[] input)
+     {
+         byte[] output = new byte[input.Length];
+
+         for (int i = 0; i < input.Length; i += 8)
+         {
+             for (int j = 0; j < 8; j++)
+             {
+                 for (int bit = 0; bit < 8; bit++)
+                 {
+                     int bitValue = (input[i + j] >> bit) & 1;
+                     output[i + bit] |= (byte)(bitValue << j);
+                 }
+             }
+         }
+
+         return output;
+     }
+
+     static byte[] DecodeBits(byte[] input)
+     {
+         byte[] output = new byte[input.Length];
+
+         for (int block = 0; block < input.Length; block += 8)
+         {
+             for (int i = 0; i < 8; i++) 
+             {
+                 byte value = 0;
+                 for (int bit = 0; bit < 8; bit++)
+                 {
+                     int bitValue = (input[block + bit] >> i) & 1;
+                     value |= (byte)(bitValue << bit);
+                 }
+                 output[block + i] = value;
+             }
+         }
+
+         return output;
+     }
+
+     static void PrintBytes(byte[] arr)
+     {
+         for (int i = 0; i < arr.Length; i++)
+         {
+             Console.Write($"0x{arr[i]:X2} ");
+             if ((i + 1) % 8 == 0) Console.WriteLine();
+         }
+         if (arr.Length % 8 != 0) Console.WriteLine();
+     }
+
+     static bool AreEqual(byte[] a, byte[] b)
+     {
+         if (a.Length != b.Length) return false;
+         for (int i = 0; i < a.Length; i++)
+             if (a[i] != b[i]) return false;
+         return true;
+     }
+ }
