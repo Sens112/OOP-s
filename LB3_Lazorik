@@ -1,0 +1,702 @@
+ using System;
+
+ class Date
+ {
+     private int day;
+     private int month;
+     private int year;
+
+     public Date()
+     {
+         day = 1;
+         month = 1;
+         year = 2000;
+     }
+
+     public Date(int d, int m, int y)
+     {
+         SetYear(y);
+         SetMonth(m);
+         SetDay(d);
+     }
+
+     public void SetDay(int d)
+     {
+         int maxDays = DaysInMonth(month, year);
+         if (d >= 1 && d <= maxDays)
+             day = d;
+         else
+         {
+             Console.WriteLine($"Некоректний день ({d}). Встановлено 1.");
+             day = 1;
+         }
+     }
+
+     public void SetMonth(int m)
+     {
+         if (m >= 1 && m <= 12)
+             month = m;
+         else
+         {
+             Console.WriteLine($"Некоректний місяць ({m}). Встановлено 1.");
+             month = 1;
+         }
+     }
+
+     public void SetYear(int y)
+     {
+         if (y >= 1)
+             year = y;
+         else
+         {
+             Console.WriteLine($"Некоректний рік ({y}). Встановлено 2000.");
+             year = 2000;
+         }
+     }
+
+     public int GetDay() => day;
+     public int GetMonth() => month;
+     public int GetYear() => year;
+
+     private int DaysInMonth(int m, int y)
+     {
+         switch (m)
+         {
+             case 2:
+                 return DateTime.IsLeapYear(y) ? 29 : 28;
+             case 4:
+             case 6:
+             case 9:
+             case 11:
+                 return 30;
+             default:
+                 return 31;
+         }
+     }
+
+     public void PrintLong()
+     {
+         string[] monthNames = {
+         "", "січня", "лютого", "березня", "квітня", "травня", "червня",
+         "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"
+     };
+
+         Console.WriteLine($"{day} {monthNames[month]} {year} року");
+     }
+
+     public void PrintShort()
+     {
+         Console.WriteLine($"{day:00}.{month:00}.{year}");
+     }
+ }
+
+ class Program
+ {
+     static void Main()
+     {
+         Console.InputEncoding = Encoding.Unicode;
+         Console.OutputEncoding = Encoding.Unicode;
+         Console.WriteLine("Тестування класу Date ");
+
+
+         Date d1 = new Date();
+         Console.Write("Дата за замовчуванням: ");
+         d1.PrintLong();
+
+        
+         Date d2 = new Date(5, 1, 2019);
+         Console.Write("Довгий формат: ");
+         d2.PrintLong();
+         Console.Write("Короткий формат: ");
+         d2.PrintShort();
+
+        
+         Date d3 = new Date(35, 15, -100);
+         Console.Write("\nПісля перевірки: ");
+         d3.PrintShort();
+
+         
+         d3.SetYear(2025);
+         d3.SetMonth(11);
+         d3.SetDay(10);
+         Console.Write("Оновлена дата: ");
+         d3.PrintLong();
+     }
+ }
+
+
+
+2zvd
+
+
+    using System;
+
+    public class Vector
+    {
+        private int[] data;
+        private int size;
+        private int state; 
+        private static int objectCount = 0; 
+
+        public Vector()
+        {
+            size = 1;
+            data = new int[size];
+            data[0] = 0;
+            state = 0;
+            objectCount++;
+        }
+
+        public Vector(int size)
+        {
+            if (size <= 0)
+            {
+                this.size = 1;
+                data = new int[this.size];
+                state = 1;
+            }
+            else
+            {
+                this.size = size;
+                data = new int[this.size];
+                for (int i = 0; i < this.size; i++)
+                {
+                    data[i] = 0;
+                }
+                state = 0;
+            }
+            objectCount++;
+        }
+
+        public Vector(int size, int value)
+        {
+            if (size <= 0)
+            {
+                this.size = 1;
+                data = new int[this.size];
+                state = 1; 
+            }
+            else
+            {
+                this.size = size;
+                data = new int[this.size];
+                for (int i = 0; i < this.size; i++)
+                {
+                    data[i] = value;
+                }
+                state = 0;
+            }
+            objectCount++;
+        }
+
+        public Vector(Vector other)
+        {
+            this.size = other.size;
+            this.data = new int[this.size];
+            for (int i = 0; i < this.size; i++)
+            {
+                this.data[i] = other.data[i];
+            }
+            this.state = other.state;
+            objectCount++;
+        }
+
+        public Vector Assign(Vector other)
+        {
+            if (this != other)
+            {
+                this.size = other.size;
+                this.data = new int[this.size];
+                for (int i = 0; i < this.size; i++)
+                {
+                    this.data[i] = other.data[i];
+                }
+                this.state = other.state;
+            }
+            return this;
+        }
+
+        ~Vector()
+        {
+            objectCount--;
+        }
+
+        public void SetValue(int index, int value = 0)
+        {
+            if (index < 0 || index >= size)
+            {
+                state = 2; 
+                Console.WriteLine("Помилка: вихід за межі масиву у SetValue.");
+                return;
+            }
+            data[index] = value;
+            state = 0;
+        }
+
+        public int GetValue(int index)
+        {
+            if (index < 0 || index >= size)
+            {
+                state = 2; 
+                Console.WriteLine("Помилка: вихід за межі масиву у GetValue.");
+                return 0;
+            }
+            state = 0;
+            return data[index];
+        }
+
+        public void Print()
+        {
+            Console.Write("[");
+            for (int i = 0; i < size; i++)
+            {
+                Console.Write(data[i]);
+                if (i < size - 1) Console.Write(", ");
+            }
+            Console.WriteLine("]");
+        }
+
+        public Vector Add(Vector other)
+        {
+            if (this.size != other.size)
+            {
+                Console.WriteLine("Помилка: розміри векторів не співпадають для додавання.");
+                return new Vector(0); // вектор нульового розміру з помилкою
+            }
+            Vector result = new Vector(this.size);
+            for (int i = 0; i < this.size; i++)
+            {
+                result.data[i] = this.data[i] + other.data[i];
+            }
+            return result;
+        }
+
+        public Vector Subtract(Vector other)
+        {
+            if (this.size != other.size)
+            {
+                Console.WriteLine("Помилка: розміри векторів не співпадають для віднімання.");
+                return new Vector(0);
+            }
+            Vector result = new Vector(this.size);
+            for (int i = 0; i < this.size; i++)
+            {
+                result.data[i] = this.data[i] - other.data[i];
+            }
+            return result;
+        }
+
+        public Vector Multiply(short scalar)
+        {
+            Vector result = new Vector(this.size);
+            for (int i = 0; i < this.size; i++)
+            {
+                result.data[i] = this.data[i] * scalar;
+            }
+            return result;
+        }
+
+        public bool IsGreater(Vector other)
+        {
+            if (this.size != other.size)
+            {
+                Console.WriteLine("Порівняння неможливе: розміри не співпадають.");
+                return false;
+            }
+            for (int i = 0; i < this.size; i++)
+            {
+                if (this.data[i] > other.data[i]) return true;
+                if (this.data[i] < other.data[i]) return false;
+            }
+            return false;
+        }
+
+        public bool IsLess(Vector other)
+        {
+            if (this.size != other.size)
+            {
+                Console.WriteLine("Порівняння неможливе: розміри не співпадають.");
+                return false;
+            }
+            for (int i = 0; i < this.size; i++)
+            {
+                if (this.data[i] < other.data[i]) return true;
+                if (this.data[i] > other.data[i]) return false;
+            }
+            return false; 
+        }
+
+        public bool IsEqual(Vector other)
+        {
+            if (this.size != other.size) return false;
+            for (int i = 0; i < this.size; i++)
+            {
+                if (this.data[i] != other.data[i]) return false;
+            }
+            return true;
+        }
+
+        public int GetState() => state;
+
+        public static int GetObjectCount() => objectCount;
+
+        public int Size => size;
+    }
+    class Program
+    {
+        static void Main()
+        {
+            Console.InputEncoding = Encoding.Unicode;
+            Console.OutputEncoding = Encoding.Unicode;
+            Console.WriteLine("Тестування класу Vector");
+
+            var v1 = new Vector();
+            v1.Print(); 
+
+            var v2 = new Vector(3);
+            v2.Print(); 
+
+            var v3 = new Vector(3, 5);
+            v3.Print(); 
+
+            v2.SetValue(1, 10);
+            v2.Print(); 
+
+            Console.WriteLine($"v2[1] = {v2.GetValue(1)}"); 
+
+            var v4 = new Vector(v3);
+            v4.Print(); 
+
+            var v5 = new Vector();
+            v5.Assign(v2);
+            v5.Print(); 
+
+            var v6 = v2.Add(v3);
+            v6.Print(); 
+
+            var v7 = v3.Subtract(v2);
+            v7.Print(); 
+
+            short scalar = 2;
+            var v8 = v2.Multiply(scalar);
+            v8.Print(); 
+
+            Console.WriteLine($"v2 > v3: {v2.IsGreater(v3)}"); 
+            Console.WriteLine($"v3 > v2: {v3.IsGreater(v2)}"); 
+            Console.WriteLine($"v2 == v5: {v2.IsEqual(v5)}"); 
+
+            v2.SetValue(10, 100); 
+            Console.WriteLine($"Стан v2: {v2.GetState()}"); 
+
+            Console.WriteLine($"Кількість об'єктів Vector: {Vector.GetObjectCount()}");
+        }
+    }
+
+3zvd
+
+
+
+    using System;
+
+    public class Matrix
+    {
+        private int[,] data; 
+        private int rows;
+        private int cols;
+        private int state; 
+        private static int objectCount = 0;
+
+        public Matrix()
+        {
+            rows = 3;
+            cols = 3;
+            data = new int[rows, cols];
+            state = 0;
+            objectCount++;
+        }
+
+        public Matrix(int n)
+        {
+            if (n <= 0)
+            {
+                rows = 1;
+                cols = 1;
+                data = new int[rows, cols];
+                state = 1; 
+            }
+            else
+            {
+                rows = n;
+                cols = n;
+                data = new int[rows, cols];
+                state = 0;
+            }
+            objectCount++;
+        }
+
+        public Matrix(int n, int m, int value)
+        {
+            if (n <= 0 || m <= 0)
+            {
+                rows = 1;
+                cols = 1;
+                data = new int[rows, cols];
+                state = 1;
+            }
+            else
+            {
+                rows = n;
+                cols = m;
+                data = new int[rows, cols];
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < cols; j++)
+                    {
+                        data[i, j] = value;
+                    }
+                }
+                state = 0;
+            }
+            objectCount++;
+        }
+
+        public Matrix(Matrix other)
+        {
+            this.rows = other.rows;
+            this.cols = other.cols;
+            this.data = new int[rows, cols];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    this.data[i, j] = other.data[i, j];
+                }
+            }
+            this.state = other.state;
+            objectCount++;
+        }
+
+        public Matrix Assign(Matrix other)
+        {
+            if (this != other)
+            {
+                this.rows = other.rows;
+                this.cols = other.cols;
+                this.data = new int[rows, cols];
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < cols; j++)
+                    {
+                        this.data[i, j] = other.data[i, j];
+                    }
+                }
+                this.state = other.state;
+            }
+            return this;
+        }
+
+        ~Matrix()
+        {
+            objectCount--;
+        }
+
+        public void SetValue(int i, int j, int value = 0)
+        {
+            if (i < 0 || i >= rows || j < 0 || j >= cols)
+            {
+                state = 2;
+                Console.WriteLine("Помилка: вихід за межі матриці у SetValue.");
+                return;
+            }
+            data[i, j] = value;
+            state = 0;
+        }
+
+        public int GetValue(int i, int j)
+        {
+            if (i < 0 || i >= rows || j < 0 || j >= cols)
+            {
+                state = 2;
+                Console.WriteLine("Помилка: вихід за межі матриці у GetValue.");
+                return 0;
+            }
+            state = 0;
+            return data[i, j];
+        }
+
+        public void Print()
+        {
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    Console.Write(data[i, j].ToString().PadLeft(4));
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+        }
+
+        public Matrix Add(Matrix other)
+        {
+            if (this.rows != other.rows || this.cols != other.cols)
+            {
+                Console.WriteLine("Помилка: розміри матриць не співпадають для додавання.");
+                return new Matrix(0, 0, 0); 
+            }
+            Matrix result = new Matrix(this.rows, this.cols, 0);
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    result.data[i, j] = this.data[i, j] + other.data[i, j];
+                }
+            }
+            return result;
+        }
+
+        public Matrix Subtract(Matrix other)
+        {
+            if (this.rows != other.rows || this.cols != other.cols)
+            {
+                Console.WriteLine("Помилка: розміри матриць не співпадають для віднімання.");
+                return new Matrix(0, 0, 0);
+            }
+            Matrix result = new Matrix(this.rows, this.cols, 0);
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    result.data[i, j] = this.data[i, j] - other.data[i, j];
+                }
+            }
+            return result;
+        }
+
+        public Matrix Multiply(Matrix other)
+        {
+            if (this.cols != other.rows)
+            {
+                Console.WriteLine("Помилка: некоректні розміри для множення матриць.");
+                return new Matrix(0, 0, 0);
+            }
+            Matrix result = new Matrix(this.rows, other.cols, 0);
+            for (int i = 0; i < this.rows; i++)
+            {
+                for (int j = 0; j < other.cols; j++)
+                {
+                    for (int k = 0; k < this.cols; k++)
+                    {
+                        result.data[i, j] += this.data[i, k] * other.data[k, j];
+                    }
+                }
+            }
+            return result;
+        }
+
+        public bool IsGreater(Matrix other)
+        {
+            if (this.rows != other.rows || this.cols != other.cols)
+            {
+                Console.WriteLine("Порівняння неможливе: розміри не співпадають.");
+                return false;
+            }
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    if (this.data[i, j] > other.data[i, j]) return true;
+                    if (this.data[i, j] < other.data[i, j]) return false;
+                }
+            }
+            return false; 
+        }
+
+        public bool IsLess(Matrix other)
+        {
+            if (this.rows != other.rows || this.cols != other.cols)
+            {
+                Console.WriteLine("Порівняння неможливе: розміри не співпадають.");
+                return false;
+            }
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    if (this.data[i, j] < other.data[i, j]) return true;
+                    if (this.data[i, j] > other.data[i, j]) return false;
+                }
+            }
+            return false; 
+        }
+
+        public bool IsEqual(Matrix other)
+        {
+            if (this.rows != other.rows || this.cols != other.cols) return false;
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    if (this.data[i, j] != other.data[i, j]) return false;
+                }
+            }
+            return true;
+        }
+
+        public int GetState() => state;
+
+        public static int GetObjectCount() => objectCount;
+
+        public int Rows => rows;
+        public int Cols => cols;
+    }
+    class Program
+    {
+        static void Main()
+        {
+            Console.InputEncoding = Encoding.Unicode;
+            Console.OutputEncoding = Encoding.Unicode;
+            Console.WriteLine("Тестування класу Matrix");
+
+            var m1 = new Matrix(); 
+            m1.Print();
+
+            var m2 = new Matrix(2); 
+            m2.Print();
+
+            var m3 = new Matrix(2, 3, 7); 
+            m3.Print();
+
+            m2.SetValue(0, 1, 10);
+            m2.Print();
+
+            Console.WriteLine($"m2[0,1] = {m2.GetValue(0, 1)}"); 
+
+            var m4 = new Matrix(m3);
+            m4.Print();
+
+            var m5 = new Matrix();
+            m5.Assign(m2);
+            m5.Print();
+
+            var m6 = m2.Add(m5);
+            m6.Print();
+
+            var m7 = m3.Subtract(m3);
+            m7.Print();
+
+            var m8 = new Matrix(2, 3, 1);
+            var m9 = new Matrix(3, 2, 2);
+            var m10 = m8.Multiply(m9);
+            m10.Print();
+
+            Console.WriteLine($"m2 > m5: {m2.IsGreater(m5)}"); 
+            Console.WriteLine($"m5 > m2: {m5.IsGreater(m2)}");
+            Console.WriteLine($"m2 == m5: {m2.IsEqual(m5)}"); 
+
+            m2.SetValue(10, 0, 100); 
+            Console.WriteLine($"Стан m2: {m2.GetState()}"); 
+
+            Console.WriteLine($"Кількість об'єктів Matrix: {Matrix.GetObjectCount()}");
+        }
+    }
