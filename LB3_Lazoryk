@@ -1,0 +1,672 @@
+
+    using System;
+
+    public class VectorInt
+    {
+        private int[] data;
+        private int size;
+        private int codeError; 
+        private static int objectCount = 0;
+
+        public VectorInt()
+        {
+            size = 1;
+            data = new int[size];
+            data[0] = 0;
+            codeError = 0;
+            objectCount++;
+        }
+
+        public VectorInt(int size)
+        {
+            if (size <= 0)
+            {
+                this.size = 1;
+                data = new int[this.size];
+                codeError = 1;
+            }
+            else
+            {
+                this.size = size;
+                data = new int[this.size];
+                codeError = 0;
+            }
+            objectCount++;
+        }
+
+        public VectorInt(int size, int value)
+        {
+            if (size <= 0)
+            {
+                this.size = 1;
+                data = new int[this.size];
+                codeError = 1;
+            }
+            else
+            {
+                this.size = size;
+                data = new int[this.size];
+                for (int i = 0; i < this.size; i++)
+                {
+                    data[i] = value;
+                }
+                codeError = 0;
+            }
+            objectCount++;
+        }
+
+        public VectorInt(VectorInt other)
+        {
+            this.size = other.size;
+            this.data = new int[this.size];
+            for (int i = 0; i < this.size; i++)
+            {
+                this.data[i] = other.data[i];
+            }
+            this.codeError = other.codeError;
+            objectCount++;
+        }
+
+        ~VectorInt()
+        {
+            objectCount--;
+        }
+
+        public int Size => size;
+
+        public int this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= size)
+                {
+                    codeError = 2;
+                    Console.WriteLine("Помилка: вихід за межі масиву у індексації.");
+                    return data[size - 1]; 
+                }
+                codeError = 0;
+                return data[index];
+            }
+            set
+            {
+                if (index < 0 || index >= size)
+                {
+                    codeError = 2;
+                    Console.WriteLine("Помилка: вихід за межі масиву у індексації.");
+                    return;
+                }
+                codeError = 0;
+                data[index] = value;
+            }
+        }
+
+        public static VectorInt operator ++(VectorInt v)
+        {
+            for (int i = 0; i < v.size; i++)
+            {
+                v.data[i]++;
+            }
+            return v;
+        }
+
+        public static VectorInt operator +(VectorInt v, int dummy)
+        {
+            var result = new VectorInt(v);
+            for (int i = 0; i < v.size; i++)
+            {
+                v.data[i]++;
+            }
+            return result;
+        }
+
+        public static VectorInt operator --(VectorInt v)
+        {
+            for (int i = 0; i < v.size; i++)
+            {
+                v.data[i]--;
+            }
+            return v;
+        }
+
+        public static VectorInt operator -(VectorInt v, int dummy)
+        {
+            var result = new VectorInt(v);
+            for (int i = 0; i < v.size; i++)
+            {
+                v.data[i]--;
+            }
+            return result;
+        }
+
+        public static bool operator !(VectorInt v)
+        {
+            return v.size != 0;
+        }
+
+        public static VectorInt operator ~(VectorInt v)
+        {
+            var result = new VectorInt(v.size);
+            for (int i = 0; i < v.size; i++)
+            {
+                result.data[i] = ~v.data[i];
+            }
+            return result;
+        }
+
+        public static VectorInt operator -(VectorInt v)
+        {
+            var result = new VectorInt(v.size);
+            for (int i = 0; i < v.size; i++)
+            {
+                result.data[i] = -v.data[i];
+            }
+            return result;
+        }
+
+        public VectorInt Assign(VectorInt other)
+        {
+            if (this != other)
+            {
+                this.size = other.size;
+                this.data = new int[this.size];
+                for (int i = 0; i < this.size; i++)
+                {
+                    this.data[i] = other.data[i];
+                }
+                this.codeError = other.codeError;
+            }
+            return this;
+        }
+
+        public VectorInt AddAssign(VectorInt other)
+        {
+            if (this.size != other.size)
+            {
+                Console.WriteLine("Помилка: розміри векторів не співпадають для +=.");
+                return this;
+            }
+            for (int i = 0; i < this.size; i++)
+            {
+                this.data[i] += other.data[i];
+            }
+            return this;
+        }
+
+        public VectorInt SubtractAssign(VectorInt other)
+        {
+            if (this.size != other.size)
+            {
+                Console.WriteLine("Помилка: розміри векторів не співпадають для -=.");
+                return this;
+            }
+            for (int i = 0; i < this.size; i++)
+            {
+                this.data[i] -= other.data[i];
+            }
+            return this;
+        }
+
+        public VectorInt MultiplyAssign(int scalar)
+        {
+            for (int i = 0; i < this.size; i++)
+            {
+                this.data[i] *= scalar;
+            }
+            return this;
+        }
+
+        public VectorInt DivideAssign(int scalar)
+        {
+            if (scalar == 0)
+            {
+                Console.WriteLine("Помилка: ділення на 0.");
+                return this;
+            }
+            for (int i = 0; i < this.size; i++)
+            {
+                this.data[i] /= scalar;
+            }
+            return this;
+        }
+
+        public VectorInt ModuloAssign(int scalar)
+        {
+            if (scalar == 0)
+            {
+                Console.WriteLine("Помилка: ділення на 0.");
+                return this;
+            }
+            for (int i = 0; i < this.size; i++)
+            {
+                this.data[i] %= scalar;
+            }
+            return this;
+        }
+
+        public VectorInt OrAssign(VectorInt other)
+        {
+            if (this.size != other.size)
+            {
+                Console.WriteLine("Помилка: розміри векторів не співпадають для |=.");
+                return this;
+            }
+            for (int i = 0; i < this.size; i++)
+            {
+                this.data[i] |= other.data[i];
+            }
+            return this;
+        }
+
+        public VectorInt XorAssign(VectorInt other)
+        {
+            if (this.size != other.size)
+            {
+                Console.WriteLine("Помилка: розміри векторів не співпадають для ^=.");
+                return this;
+            }
+            for (int i = 0; i < this.size; i++)
+            {
+                this.data[i] ^= other.data[i];
+            }
+            return this;
+        }
+
+        public VectorInt AndAssign(VectorInt other)
+        {
+            if (this.size != other.size)
+            {
+                Console.WriteLine("Помилка: розміри векторів не співпадають для &=.");
+                return this;
+            }
+            for (int i = 0; i < this.size; i++)
+            {
+                this.data[i] &= other.data[i];
+            }
+            return this;
+        }
+
+        public static VectorInt operator +(VectorInt v1, VectorInt v2)
+        {
+            if (v1.size != v2.size)
+            {
+                Console.WriteLine("Помилка: розміри векторів не співпадають для +.");
+                return new VectorInt(0);
+            }
+            var result = new VectorInt(v1.size);
+            for (int i = 0; i < v1.size; i++)
+            {
+                result.data[i] = v1.data[i] + v2.data[i];
+            }
+            return result;
+        }
+
+        public static VectorInt operator -(VectorInt v1, VectorInt v2)
+        {
+            if (v1.size != v2.size)
+            {
+                Console.WriteLine("Помилка: розміри векторів не співпадають для -.");
+                return new VectorInt(0);
+            }
+            var result = new VectorInt(v1.size);
+            for (int i = 0; i < v1.size; i++)
+            {
+                result.data[i] = v1.data[i] - v2.data[i];
+            }
+            return result;
+        }
+
+        public static VectorInt operator *(VectorInt v, int scalar)
+        {
+            var result = new VectorInt(v.size);
+            for (int i = 0; i < v.size; i++)
+            {
+                result.data[i] = v.data[i] * scalar;
+            }
+            return result;
+        }
+
+        public static VectorInt operator *(int scalar, VectorInt v)
+        {
+            return v * scalar;
+        }
+
+        public static VectorInt operator /(VectorInt v, int scalar)
+        {
+            if (scalar == 0)
+            {
+                Console.WriteLine("Помилка: ділення на 0.");
+                return new VectorInt(0);
+            }
+            var result = new VectorInt(v.size);
+            for (int i = 0; i < v.size; i++)
+            {
+                result.data[i] = v.data[i] / scalar;
+            }
+            return result;
+        }
+
+        public static VectorInt operator %(VectorInt v, int scalar)
+        {
+            if (scalar == 0)
+            {
+                Console.WriteLine("Помилка: ділення на 0.");
+                return new VectorInt(0);
+            }
+            var result = new VectorInt(v.size);
+            for (int i = 0; i < v.size; i++)
+            {
+                result.data[i] = v.data[i] % scalar;
+            }
+            return result;
+        }
+
+        public static VectorInt operator |(VectorInt v1, VectorInt v2)
+        {
+            if (v1.size != v2.size)
+            {
+                Console.WriteLine("Помилка: розміри векторів не співпадають для |.");
+                return new VectorInt(0);
+            }
+            var result = new VectorInt(v1.size);
+            for (int i = 0; i < v1.size; i++)
+            {
+                result.data[i] = v1.data[i] | v2.data[i];
+            }
+            return result;
+        }
+
+        public static VectorInt operator ^(VectorInt v1, VectorInt v2)
+        {
+            if (v1.size != v2.size)
+            {
+                Console.WriteLine("Помилка: розміри векторів не співпадають для ^.");
+                return new VectorInt(0);
+            }
+            var result = new VectorInt(v1.size);
+            for (int i = 0; i < v1.size; i++)
+            {
+                result.data[i] = v1.data[i] ^ v2.data[i];
+            }
+            return result;
+        }
+
+        public static VectorInt operator &(VectorInt v1, VectorInt v2)
+        {
+            if (v1.size != v2.size)
+            {
+                Console.WriteLine("Помилка: розміри векторів не співпадають для &.");
+                return new VectorInt(0);
+            }
+            var result = new VectorInt(v1.size);
+            for (int i = 0; i < v1.size; i++)
+            {
+                result.data[i] = v1.data[i] & v2.data[i];
+            }
+            return result;
+        }
+
+        public static bool operator ==(VectorInt v1, VectorInt v2)
+        {
+            if (v1.size != v2.size) return false;
+            for (int i = 0; i < v1.size; i++)
+            {
+                if (v1.data[i] != v2.data[i]) return false;
+            }
+            return true;
+        }
+
+        public static bool operator !=(VectorInt v1, VectorInt v2)
+        {
+            return !(v1 == v2);
+        }
+
+        public static bool operator >(VectorInt v1, VectorInt v2)
+        {
+            if (v1.size != v2.size)
+            {
+                Console.WriteLine("Порівняння неможливе: розміри не співпадають.");
+                return false;
+            }
+            for (int i = 0; i < v1.size; i++)
+            {
+                if (v1.data[i] > v2.data[i]) return true;
+                if (v1.data[i] < v2.data[i]) return false;
+            }
+            return false;
+        }
+
+        public static bool operator >=(VectorInt v1, VectorInt v2)
+        {
+            return v1 > v2 || v1 == v2;
+        }
+
+        public static bool operator <(VectorInt v1, VectorInt v2)
+        {
+            if (v1.size != v2.size)
+            {
+                Console.WriteLine("Порівняння неможливе: розміри не співпадають.");
+                return false;
+            }
+            for (int i = 0; i < v1.size; i++)
+            {
+                if (v1.data[i] < v2.data[i]) return true;
+                if (v1.data[i] > v2.data[i]) return false;
+            }
+            return false;
+        }
+
+        public static bool operator <=(VectorInt v1, VectorInt v2)
+        {
+            return v1 < v2 || v1 == v2;
+        }
+
+        public int Invoke()
+        {
+            int sum = 0;
+            for (int i = 0; i < size; i++)
+            {
+                sum += data[i];
+            }
+            return sum;
+        }
+
+        public override string ToString()
+        {
+            string result = "[";
+            for (int i = 0; i < size; i++)
+            {
+                result += data[i].ToString();
+                if (i < size - 1) result += ", ";
+            }
+            result += "]";
+            return result;
+        }
+
+        public int GetCodeError() => codeError;
+
+        public static int GetObjectCount() => objectCount;
+    }
+    class Program
+    {
+        static void Main()
+        {
+            Console.WriteLine("Тестування класу VectorInt");
+
+            var v1 = new VectorInt(3, 2);
+            var v2 = new VectorInt(3, 3); 
+
+            Console.WriteLine($"v1 = {v1}");
+            Console.WriteLine($"v2 = {v2}");
+
+            // Вираз 1: v1 += v2; v1 *= 2; v1--; v1[0] = 10; v1 &= v2;
+            v1.AddAssign(v2); 
+            v1.MultiplyAssign(2);
+            v1--; 
+            v1[0] = 10; 
+            v1.AndAssign(v2);
+            Console.WriteLine("Вираз 1: v1 = (v1 + v2) * 2 - 1; v1[0] = 10; v1 &= v2 => " + v1);
+
+            // Вираз 2: v3 = v2 * 2 - v1; v3 |= v1; v3 ^= v2;
+            var v3 = v2 * 2 - v1; 
+            v3.OrAssign(v1); 
+            v3.XorAssign(v2); 
+            Console.WriteLine("Вираз 2: v3 = (v2 * 2 - v1) | v1 ^ v2 => " + v3);
+
+            // Вираз 3: v4 = -v3; v4 %= 3; v4++; v4[1] = 0; v4 &= v1;
+            var v4 = -v3; 
+            v4.ModuloAssign(3); 
+            v4++; 
+            v4[1] = 0;
+            v4.AndAssign(v1); 
+            Console.WriteLine("Вираз 3: v4 = (-v3) % 3 + 1; v4[1] = 0; v4 &= v1 => " + v4);
+
+            // Вираз 4: v5 = ~v2; v5 /= 2; v5 |= v1; v5 ^= v3; v5 += v4;
+            var v5 = ~v2; 
+            v5.DivideAssign(2); 
+            v5.OrAssign(v1); 
+            v5.XorAssign(v3); 
+            v5.AddAssign(v4); 
+            Console.WriteLine("Вираз 4: v5 = (~v2) / 2 | v1 ^ v3 + v4 => " + v5);
+
+            Console.WriteLine($"v1 == v2: {v1 == v2}"); 
+            Console.WriteLine($"v1 != v2: {v1 != v2}"); 
+            Console.WriteLine($"v1 > v2: {v1 > v2}"); 
+            Console.WriteLine($"v5 > v2: {v5 > v2}"); 
+
+            Console.WriteLine($"Сума елементів v5: {v5.Invoke()}");
+
+            Console.WriteLine($"Кількість об'єктів VectorInt: {VectorInt.GetObjectCount()}");
+        }
+    }
+
+
+2zvd
+
+
+using System;
+using System.Collections.Generic;
+
+public class NumberToString
+{
+    private Dictionary<int, string> map = new Dictionary<int, string>();
+    private int codeError; 
+    private static int objectCount = 0;
+
+    public NumberToString()
+    {
+        InitializeMap();
+        objectCount++;
+    }
+
+    private void InitializeMap()
+    {
+        string[] units = { "", "один", "два", "три", "чотири", "п'ять", "шість", "сім", "вісім", "дев'ять" };
+        string[] teens = { "десять", "одинадцять", "дванадцять", "тринадцять", "чотирнадцять", "п'ятнадцять", "шістнадцять", "сімнадцять", "вісімнадцять", "дев'ятнадцять" };
+        string[] tens = { "", "", "двадцять", "тридцять", "сорок", "п'ятдесят", "шістдесят", "сімдесят", "вісімдесят", "дев'яносто" };
+
+        for (int i = 1; i <= 100; i++)
+        {
+            string result = "";
+
+            if (i < 10)
+            {
+                result = units[i];
+            }
+            else if (i < 20)
+            {
+                result = teens[i - 10];
+            }
+            else
+            {
+                int tensDigit = i / 10;
+                int unitsDigit = i % 10;
+                result = tens[tensDigit];
+                if (unitsDigit > 0)
+                {
+                    result += " " + units[unitsDigit];
+                }
+            }
+
+            map[i] = result;
+        }
+    }
+
+    public string this[int number]
+    {
+        get
+        {
+            if (map.ContainsKey(number))
+            {
+                codeError = 0;
+                return map[number];
+            }
+            else
+            {
+                codeError = 1;
+                Console.WriteLine($"Помилка: число {number} не знаходиться в діапазоні 1-100 або не має відповідника.");
+                return "";
+            }
+        }
+        set
+        {
+            if (number >= 1 && number <= 100)
+            {
+                map[number] = value;
+                codeError = 0;
+            }
+            else
+            {
+                codeError = 1;
+                Console.WriteLine($"Помилка: число {number} не входить у діапазон 1-100 для збереження.");
+            }
+        }
+    }
+
+    public string Invoke(int number)
+    {
+        if (map.ContainsKey(number))
+        {
+            codeError = 0;
+            return map[number];
+        }
+        else
+        {
+            codeError = 1;
+            Console.WriteLine($"Помилка: число {number} не знаходиться в діапазоні 1-100 або не має відповідника.");
+            return "";
+        }
+    }
+
+    public override string ToString()
+    {
+        string result = "";
+        foreach (var kvp in map)
+        {
+            result += $"{kvp.Key} -> {kvp.Value}\n";
+        }
+        return result.TrimEnd('\n');
+    }
+
+    public int GetCodeError() => codeError;
+
+    public static int GetObjectCount() => objectCount;
+}
+class Program
+{
+    static void Main()
+    {
+        var assoc = new NumberToString();
+
+        Console.WriteLine($"1 -> {assoc[1]}"); 
+        Console.WriteLine($"10 -> {assoc[10]}"); 
+        Console.WriteLine($"45 -> {assoc[45]}"); 
+        Console.WriteLine($"101 -> {assoc[101]}"); 
+
+        Console.WriteLine($"Функція(25) -> {assoc.Invoke(25)}"); 
+
+        Console.WriteLine("\nУвесь асоціативний масив:");
+        Console.WriteLine(assoc);
+
+        Console.WriteLine($"Кількість об'єктів: {NumberToString.GetObjectCount()}");
+    }
+}
